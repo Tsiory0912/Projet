@@ -1,0 +1,37 @@
+{% extends 'base.html.twig' %}
+
+{% block body %}
+<div class="container mt-5">
+    <h1 class="mb-4">Créer une nouvelle sortie</h1>
+
+    <form method="post">
+        <div class="mb-3">
+            <label for="dateSortie" class="form-label">Date de sortie</label>
+            <input type="datetime-local" id="dateSortie" name="dateSortie" class="form-control" required>
+        </div>
+
+        <div class="mb-3">
+            <label for="quantite" class="form-label">Quantité</label>
+            <input type="number" id="quantite" name="quantite" class="form-control" required>
+        </div>
+
+        <div class="mb-3">
+            <label for="observation" class="form-label">Observation</label>
+            <textarea id="observation" name="observation" class="form-control" rows="3"></textarea>
+        </div>
+
+        <div class="mb-3">
+            <label for="agent" class="form-label">Agent</label>
+            <select id="agent" name="agent" class="form-control" required>
+                <option value="">Choisissez un agent</option>
+                {% for agent in agents %}
+                    <option value="{{ agent.id }}">{{ agent.username }}</option>
+                {% endfor %}
+            </select>
+        </div>
+
+        <button type="submit" class="btn btn-success">Créer</button>
+        <a href="{{ path('app_sortie_index') }}" class="btn btn-secondary">Retour à la liste</a>
+    </form>
+</div>
+{% endblock %}

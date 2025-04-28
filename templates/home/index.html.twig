@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html lang="fr" data-bs-theme="auto">
+<head>
+    <meta charset="UTF-8">
+    <title>Accueil</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    {# Bootstrap + Bootstrap Icons #}
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css" rel="stylesheet">
+
+    <style>
+        body {
+            font-family: 'Segoe UI', Roboto, sans-serif;
+        }
+
+        .navbar-brand span {
+            font-size: 1.5rem;
+            font-weight: bold;
+        }
+
+        .card h1 {
+            font-size: 2rem;
+            color: #0d6efd;
+        }
+
+        footer {
+            background: #f8f9fa;
+            padding: 2rem 0;
+            margin-top: 4rem;
+        }
+
+        [data-bs-theme="dark"] footer {
+            background: #1f1f1f;
+            color: #ccc;
+        }
+    </style>
+</head>
+<body class="bg-body text-body">
+
+    {# Navbar avec logo #}
+    <nav class="navbar navbar-expand-lg navbar-light bg-body-tertiary shadow-sm">
+        <div class="container">
+            <a class="navbar-brand d-flex align-items-center" href="{{ path('app_dashboard') }}">
+                <img src="{{ asset('images/logo.png') }}" alt="Logo" style="height: 50px;">
+                <span class="ms-3">Gestion de Stock</span>
+            </a>
+        </div>
+    </nav>
+
+    {# Messages flash #}
+    {% for label, messages in app.flashes %}
+        <div class="alert alert-{{ label }} alert-dismissible fade show mx-3 mt-3" role="alert">
+            {% for message in messages %}
+                <p>{{ message }}</p>
+            {% endfor %}
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>
+    {% endfor %}
+
+    {# Afficher les rôles de l'utilisateur connecté #}
+    <div class="alert alert-info mx-3 mt-3">
+        <strong>Rôles de l'utilisateur : </strong>{{ user_roles|join(', ') }}
+    </div>
+
+    {# Contenu principal #}
+    <div class="container my-5">
+        <h1 class="text-center mb-4">Bienvenue</h1>
+        <p class="text-center lead mb-5">Ce projet gère les stocks de fournitures, de mobiliers et de matériels informatiques.</p>
+
+        <div class="text-center mb-5">
+            <a href="{{ path('app_dashboard') }}" class="btn btn-primary btn-lg">Accéder au Tableau de Bord</a>
+        </div>
+
+        {# Ajout du lien "Forcer la déconnexion" #}
+        <div class="text-center mb-5">
+            <a href="{{ path('force_logout') }}" class="btn btn-warning btn-lg">
+                🔄 Forcer la déconnexion
+            </a>
+        </div>
+
+        {# Liste des entités avec statistiques #}
+        {% set entities = [
+            {'title': 'Agent', 'route': 'app_agent_index', 'icon': 'bi-person', 'count': stats.agents},
+            {'title': 'Catégorie', 'route': 'app_categorie_index', 'icon': 'bi-folder', 'count': stats.categories},
+            {'title': 'Article', 'route': 'app_article_index', 'icon': 'bi-box-seam', 'count': stats.articles},
+            {'title': 'Sortie', 'route': 'app_sortie_index', 'icon': 'bi-box-arrow-up', 'count': stats.sorties},
+            {'title': 'Entrée', 'route': 'app_entree_index', 'icon': 'bi-box-arrow-in-down', 'count': stats.entrees},
+            {'title': 'Stock', 'route': 'app_stock_index', 'icon': 'bi-bar-chart', 'count': stats.stocks},
+            {'title': 'Unité', 'route': 'app_unite_index', 'icon': 'bi-rulers', 'count': stats.unites},
+            {'title': 'Utilisateur', 'route': 'app_user', 'icon': 'bi-people', 'count': stats.users}
+        ] %}
+
+        <div class="row row-cols-1 row-cols-md-3 g-4">
+            {% for entity in entities %}
+                <div class="col">
+                    <div class="card shadow-sm h-100 border-0">
+                        <div class="card-body text-center">
+                            <i class="bi {{ entity.icon }} display-5 text-primary mb-3"></i>
+                            <h5 class="card-title">{{ entity.title }}</h5>
+                            <p class="card-text text-muted">
+                                {{ entity.count }} {{ entity.title | lower }}{{ entity.count > 1 ? 's' : '' }}
+                            </p>
+                            <a href="{{ path(entity.route) }}" class="btn btn-outline-primary mt-2">Accéder</a>
+                        </div>
+                    </div>
+                </div>
+            {% endfor %}
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

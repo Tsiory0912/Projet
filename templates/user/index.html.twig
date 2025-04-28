@@ -1,0 +1,14 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Utilisateur - {{ user.username }}{% endblock %}
+
+{% block body %}
+    <h1>Bienvenue, {{ user.username }} ! ✅</h1>
+
+    <p>Voici les informations de ton compte :</p>
+    <ul>
+        <li>ID: {{ user.id }}</li>
+        <li>Email: {{ user.email }}</li>
+        <li>Rôle(s): {{ user.roles | join(', ') }}</li>
+    </ul>
+{% endblock %}

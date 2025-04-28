@@ -1,0 +1,25 @@
+{{ form_start(form) }}
+
+    {# Affichage personnalisé du champ numeroAgent #}
+    <div class="form-group">
+        {{ form_label(form.numeroAgent) }}  {# Affiche le label du champ numeroAgent #}
+        {{ form_widget(form.numeroAgent, {'attr': {'class': 'form-control'}}) }}  {# Affiche le champ numeroAgent avec la classe CSS 'form-control' #}
+        {{ form_errors(form.numeroAgent) }}  {# Affiche les erreurs pour numeroAgent, s'il y en a #}
+    </div>
+
+    {# Affichage des autres champs #}
+    <div class="form-group">
+        {{ form_widget(form.matricule) }}
+    </div>
+
+    <div class="form-group">
+        {{ form_widget(form.nom) }}
+    </div>
+
+    <div class="form-group">
+        {{ form_widget(form.roles) }}
+    </div>
+
+    <button class="btn btn-primary">{{ button_label|default('Save') }}</button>
+
+{{ form_end(form) }}

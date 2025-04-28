@@ -1,0 +1,28 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Ajouter un Stock{% endblock %}
+
+{% block body %}
+<div class="container mt-5">
+    <h1 class="mb-4">➕ Ajouter un Stock</h1>
+
+    {{ form_start(form, {'attr': {'class': 'row g-3'}}) }}
+        <div class="col-md-6">
+            {{ form_label(form.quantite, 'Quantité', {'label_attr': {'class': 'form-label'}}) }}
+            {{ form_widget(form.quantite, {'attr': {'class': 'form-control'}}) }}
+            {{ form_errors(form.quantite) }}
+        </div>
+
+        <div class="col-md-6">
+            {{ form_label(form.date_maj, 'Date de mise à jour', {'label_attr': {'class': 'form-label'}}) }}
+            {{ form_widget(form.date_maj, {'attr': {'class': 'form-control'}}) }}
+            {{ form_errors(form.date_maj) }}
+        </div>
+
+        <div class="col-12">
+            <button class="btn btn-success">✅ Enregistrer</button>
+            <a href="{{ path('app_stock_index') }}" class="btn btn-secondary">↩ Retour à la liste</a>
+        </div>
+    {{ form_end(form) }}
+</div>
+{% endblock %}

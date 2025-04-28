@@ -1,0 +1,16 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Créer une nouvelle unité{% endblock %}
+
+{% block body %}
+<div class="container mt-5">
+    <h1 class="mb-4">Créer une nouvelle unité</h1>
+
+    {{ form_start(form) }}  <!-- Début du formulaire Symfony -->
+        {{ form_row(form.nom) }}  <!-- Affiche le champ 'nom' du formulaire -->
+
+        <button type="submit" class="btn btn-success">Créer</button>
+        <a href="{{ path('app_unite_index') }}" class="btn btn-secondary">Retour à la liste</a>
+    {{ form_end(form) }}  <!-- Fin du formulaire Symfony -->
+</div>
+{% endblock %}

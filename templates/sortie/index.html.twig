@@ -1,0 +1,91 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Liste des Sorties de Stock{% endblock %}
+
+{% block body %}
+<div class="container mt-5">
+    <h1 class="mb-4">📦 Les sorties de Stock</h1>
+
+    <div class="d-flex justify-content-between mb-4">
+        <div>
+            <a href="{{ path('app_home') }}" class="btn btn-primary">🏠 Retour à l'accueil</a>
+            <a href="{{ path('app_sortie_index') }}" class="btn btn-secondary">🔄 Actualiser</a>
+        </div>
+        <a href="{{ path('app_sortie_new') }}" class="btn btn-success">➕ Ajouter une nouvelle sortie</a>
+    </div>
+
+    <!-- Formulaire de recherche -->
+    <form method="get" action="{{ path('app_sortie_index') }}" class="row g-3 mb-4">
+        <div class="col-md-3">
+            <label for="date" class="form-label">📅 Par date</label>
+            <input type="date" id="date" name="date" class="form-control" value="{{ app.request.get('date') }}">
+        </div>
+        <div class="col-md-3">
+            <label for="article" class="form-label">📘 Par article</label>
+            <input type="text" id="article" name="article" class="form-control" placeholder="Nom de l'article" value="{{ app.request.get('article') }}">
+        </div>
+        <div class="col-md-3">
+            <label for="categorie" class="form-label">📂 Par catégorie</label>
+            <input type="text" id="categorie" name="categorie" class="form-control" placeholder="Nom de la catégorie" value="{{ app.request.get('categorie') }}">
+        </div>
+        <div class="col-md-3">
+            <label for="agent" class="form-label">👨‍💼 Par agent</label>
+            <input type="text" id="agent" name="agent" class="form-control" placeholder="Nom de l'agent" value="{{ app.request.get('agent') }}">
+        </div>
+        <div class="col-12 text-end">
+            <button type="submit" class="btn btn-success mt-2">🔎 Filtrer</button>
+        </div>
+    </form>
+
+    <!-- Tableau des sorties -->
+    <table class="table table-bordered table-striped align-middle">
+        <thead class="table-dark">
+            <tr>
+                <th>ID</th>
+                <th>Date de sortie</th>
+                <th>Quantité</th>
+                <th>Article</th>
+                <th>Catégorie</th>
+                <th>Agent</th>
+                <th>Observation</th>
+                <th>Dernière mise à jour</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+        {% for sortie in sorties %}
+            <tr>
+                <td>{{ sortie.id }}</td>
+                <td>{{ sortie.dateSortie ? sortie.dateSortie|date('d/m/Y') : '' }}</td>
+                <td>{{ sortie.quantite }}</td>
+                <td>{{ sortie.article.nom }}</td>
+                <td>{{ sortie.article.categorie.nom }}</td>
+                <td>{{ sortie.agent.username }}</td>
+                <td>{{ sortie.observation }}</td>
+                <td>{{ sortie.updatedAt ? sortie.updatedAt|date('d/m/Y H:i') : '' }}</td>
+                <td>
+                    <a href="{{ path('app_sortie_show', {'id': sortie.id}) }}" class="btn btn-info btn-sm">Voir</a>
+                    <a href="{{ path('app_sortie_edit', {'id': sortie.id}) }}" class="btn btn-warning btn-sm">Modifier</a>
+
+                    <form method="post" 
+                          action="{{ path('app_sortie_delete', {'id': sortie.id}) }}" 
+                          style="display:inline-block;" 
+                          onsubmit="return confirm('Êtes-vous sûr de vouloir supprimer cette sortie ?');">
+                        <input type="hidden" name="_token" value="{{ csrf_token('delete' ~ sortie.id) }}">
+                        <button class="btn btn-danger btn-sm">Supprimer</button>
+                    </form>
+                </td>
+            </tr>
+        {% else %}
+            <tr>
+                <td colspan="9" class="text-center text-muted">Aucune sortie trouvée.</td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+
+    <footer class="mt-5 text-center">
+        © 2025 <strong>Gestion de Stock</strong> — Tous droits réservés
+    </footer>
+</div>
+{% endblock %}

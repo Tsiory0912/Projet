@@ -1,0 +1,94 @@
+{% extends 'base.html.twig' %}
+
+{% block body %}
+<div class="container mt-5">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h1 class="mb-0">Les catégories</h1>
+        <a href="{{ path('app_home') }}" class="text-decoration-none">
+            <i class="fas fa-arrow-left"></i> Retour à l'accueil
+        </a>
+    </div>
+
+    <!-- Formulaire de recherche -->
+    <form method="get" action="{{ path('app_categorie_index') }}" class="mb-3">
+        <div class="input-group">
+            <input type="text" name="search" class="form-control" placeholder="Rechercher par nom de catégorie" value="{{ search }}">
+            <button class="btn btn-primary" type="submit">🔍 Rechercher</button>
+        </div>
+    </form>
+
+    <a href="{{ path('app_categorie_new') }}" class="btn btn-success mb-3">➕ Ajouter une nouvelle catégorie</a>
+
+    <table class="table table-bordered table-striped" id="categorieTable">
+        <thead class="table-dark">
+            <tr>
+                <th>ID</th>
+                <th>Nom de la catégorie</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody id="categorieList">
+        {% for categorie in categories %}
+            <tr>
+                <td>{{ categorie.id }}</td>
+                <td>{{ categorie.nom }}</td>
+                <td>
+                    <a href="{{ path('app_categorie_show', {'id': categorie.id}) }}" class="btn btn-info btn-sm">Voir</a>
+                    <a href="{{ path('app_categorie_edit', {'id': categorie.id}) }}" class="btn btn-warning btn-sm">Modifier</a>
+                    <form method="post" action="{{ path('app_categorie_delete', {'id': categorie.id}) }}" style="display:inline-block;" onsubmit="return confirm('Êtes-vous sûr ?');">
+                        <input type="hidden" name="_token" value="{{ csrf_token('delete' ~ categorie.id) }}">
+                        <button class="btn btn-danger btn-sm">Supprimer</button>
+                    </form>
+                </td>
+            </tr>
+        {% else %}
+            <tr>
+                <td colspan="3" class="text-center text-muted">Aucune catégorie trouvée.</td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+
+    {% if categories|length > 0 %}
+        <div class="d-flex justify-content-center">
+            {{ knp_pagination_render(categories) }}
+        </div>
+    {% endif %}
+</div>
+
+<script>
+    // Fonction pour actualiser la liste des catégories toutes les 5 secondes
+    function actualiserCategories() {
+        fetch("{{ path('app_categorie_actualiser') }}")
+            .then(response => response.json())
+            .then(data => {
+                let categorieList = document.getElementById("categorieList");
+                categorieList.innerHTML = '';
+                data.forEach(categorie => {
+                    let row = document.createElement("tr");
+                    row.innerHTML = `
+                        <td>${categorie.id}</td>
+                        <td>${categorie.nom}</td>
+                        <td>
+                            <a href="{{ path('app_categorie_show', {'id': 'ID'}) }}" class="btn btn-info btn-sm">Voir</a>
+                            <a href="{{ path('app_categorie_edit', {'id': 'ID'}) }}" class="btn btn-warning btn-sm">Modifier</a>
+                            <form method="post" action="{{ path('app_categorie_delete', {'id': 'ID'}) }}" style="display:inline-block;" onsubmit="return confirm('Êtes-vous sûr ?');">
+                                <input type="hidden" name="_token" value="{{ csrf_token('delete' ~ 'ID') }}">
+                                <button class="btn btn-danger btn-sm">Supprimer</button>
+                            </form>
+                        </td>
+                    `;
+                    // Remplacer les placeholders par les valeurs réelles
+                    row.querySelector('a[href*="ID"]').setAttribute('href', row.querySelector('a[href*="ID"]').getAttribute('href').replace('ID', categorie.id));
+                    row.querySelector('form').setAttribute('action', row.querySelector('form').getAttribute('action').replace('ID', categorie.id));
+                    row.querySelector('input[name="_token"]').setAttribute('value', row.querySelector('input[name="_token"]').getAttribute('value').replace('ID', categorie.id));
+                    categorieList.appendChild(row);
+                });
+            });
+    }
+
+    // Actualiser toutes les 5 secondes
+    setInterval(actualiserCategories, 5000);
+</script>
+
+{% endblock %}

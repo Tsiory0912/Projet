@@ -1,0 +1,95 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Liste des Entrées de Stock{% endblock %}
+
+{% block body %}
+<div class="container mt-5">
+    <h1 class="mb-4">📦 Les entrées de stock</h1>
+
+    <!-- Messages flash -->
+    {% for label, messages in app.flashes %}
+        {% for message in messages %}
+            <div class="alert alert-{{ label == 'error' ? 'danger' : label }} alert-dismissible fade show" role="alert">
+                {{ message }}
+                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+            </div>
+        {% endfor %}
+    {% endfor %}
+
+    <!-- Bouton d'ajout -->
+    <div class="mb-3 d-flex justify-content-between align-items-center">
+        <a href="{{ path('app_entree_new') }}" class="btn btn-success">
+            ➕ Ajouter une nouvelle entrée
+        </a>
+    </div>
+
+    <!-- Formulaire de recherche -->
+    <form method="get" class="mb-4 row g-3 align-items-end">
+        <div class="col-auto">
+            <label for="date" class="form-label">📅 Par date</label>
+            <input type="date" id="date" name="date" class="form-control" value="{{ dateRecherche|default('') }}">
+        </div>
+        <div class="col-auto">
+            <label for="article" class="form-label">📘 Par article</label>
+            <input type="text" id="article" name="article" class="form-control" placeholder="Nom de l'article" value="{{ articleRecherche|default('') }}">
+        </div>
+        <div class="col-auto">
+            <label for="categorie" class="form-label">📂 Par catégorie</label>
+            <input type="text" id="categorie" name="categorie" class="form-control" placeholder="Nom de la catégorie" value="{{ categorieRecherche|default('') }}">
+        </div>
+        <div class="col-auto">
+            <button type="submit" class="btn btn-primary">
+                🔍 Rechercher
+            </button>
+            {% if dateRecherche or articleRecherche or categorieRecherche %}
+                <a href="{{ path('app_entree_index') }}" class="btn btn-secondary">❌ Réinitialiser</a>
+            {% endif %}
+        </div>
+    </form>
+
+    <!-- Tableau des stocks -->
+    <table class="table table-bordered table-hover align-middle">
+        <thead class="table-dark text-center">
+            <tr>
+                <th>ID</th>
+                <th>Date d'entrée</th>
+                <th>Quantité</th>
+                <th>Article</th> <!-- Colonne Article -->
+                <th>Catégorie</th> <!-- Colonne Catégorie -->
+                <th>Observation</th>
+                <th>Dernière mise à jour</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for entree in entrees %}
+                <tr>
+                    <td class="text-center">{{ entree.id }}</td>
+                    <td>{{ entree.dateEntree ? entree.dateEntree|date('d/m/Y H:i') : '—' }}</td>
+                    <td class="text-center">{{ entree.quantite }}</td>
+                    <td>{{ entree.article.nom }}</td> <!-- Affichage du nom de l'article -->
+                    <td>{{ entree.article.categorie.nom }}</td> <!-- Affichage du nom de la catégorie -->
+                    <td>{{ entree.observation ?: 'Aucune' }}</td>
+                    <td>{{ entree.dateMaj ? entree.dateMaj|date('d/m/Y H:i') : '—' }}</td>
+                    <td class="text-center">
+                        <a href="{{ path('app_entree_show', {'id': entree.id}) }}" class="btn btn-info btn-sm">👁️ Voir</a>
+                        <a href="{{ path('app_entree_edit', {'id': entree.id}) }}" class="btn btn-warning btn-sm">✏️ Modifier</a>
+                        <form method="post" action="{{ path('app_entree_delete', {'id': entree.id}) }}"
+                              onsubmit="return confirm('Confirmer la suppression de cette entrée ?');"
+                              class="d-inline">
+                            <input type="hidden" name="_token" value="{{ csrf_token('delete' ~ entree.id) }}">
+                            <button class="btn btn-danger btn-sm">🗑️ Supprimer</button>
+                        </form>
+                    </td>
+                </tr>
+            {% else %}
+                <tr>
+                    <td colspan="8" class="text-center text-muted">Aucune entrée trouvée.</td>
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+
+    <!-- Pagination (à activer si tu veux) -->
+</div>
+{% endblock %}

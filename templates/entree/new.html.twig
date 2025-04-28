@@ -1,0 +1,45 @@
+{% extends 'base.html.twig' %}
+
+{% block body %}
+<div class="container mt-5">
+    <h1 class="mb-4">Créer une nouvelle entrée</h1>
+
+    {# Affichage des messages d'erreur généraux (flash messages) #}
+    {% if app.flashes('error') %}
+        <div class="alert alert-danger">
+            {% for message in app.flashes('error') %}
+                <p>{{ message }}</p>
+            {% endfor %}
+        </div>
+    {% endif %}
+
+    {{ form_start(form) }}
+
+    <div class="mb-3">
+        {{ form_row(form.dateEntree) }}
+    </div>
+
+    <div class="mb-3">
+        {{ form_row(form.quantite) }}
+    </div>
+
+    {# Champ article avec icône combo (chevron vers le bas) à droite #}
+    <div class="mb-3 position-relative">
+        {{ form_label(form.article) }}
+        <div class="input-group">
+            {{ form_widget(form.article, {
+                'attr': {'class': 'form-select'}
+            }) }}
+            <span class="input-group-text">
+                <i class="fas fa-chevron-down"></i>
+            </span>
+        </div>
+        {{ form_errors(form.article) }}
+    </div>
+
+    <button type="submit" class="btn btn-success">Créer</button>
+    <a href="{{ path('app_entree_index') }}" class="btn btn-secondary">Retour à la liste</a>
+
+    {{ form_end(form) }}
+</div>
+{% endblock %}

@@ -1,0 +1,35 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Modifier l'article{% endblock %}
+
+{% block body %}
+    <div class="container mt-4">
+        <h1>Modifier l'article</h1>
+
+        {{ form_start(form) }}
+            <div class="mb-3">
+                {{ form_row(form.code) }}
+            </div>
+            <div class="mb-3">
+                {{ form_row(form.nom) }}
+            </div>
+            <div class="mb-3">
+                {{ form_row(form.stockAlerte) }}
+            </div>
+            <div class="mb-3">
+                {{ form_row(form.categorie) }}
+            </div>
+            <div class="mb-3">
+                {{ form_row(form.unite) }}
+            </div>
+            <div class="mb-3">
+                {{ form_row(form.stock) }}
+            </div>
+            
+            <div class="d-flex justify-content-between">
+                <button type="submit" class="btn btn-primary">Enregistrer</button>
+                <a href="{{ path('app_article_index') }}" class="btn btn-secondary">Annuler</a>
+            </div>
+        {{ form_end(form) }}
+    </div>
+{% endblock %}

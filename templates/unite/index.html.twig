@@ -1,0 +1,62 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Liste des Unités{% endblock %}
+
+{% block body %}
+<div class="container mt-5">
+    <h1 class="mb-4">Les unités</h1>
+
+    <!-- Barre de recherche -->
+    <form method="get" class="mb-4 d-flex gap-2">
+        <input type="text" name="search" value="{{ searchTerm }}" placeholder="🔍 Rechercher une unité..." class="form-control">
+        <button type="submit" class="btn btn-primary">Rechercher</button>
+        <a href="{{ path('app_unite_index') }}" class="btn btn-secondary">🔄 Actualiser</a>
+    </form>
+
+    <!-- Lien vers l'accueil -->
+    <a href="{{ path('app_home') }}" class="btn btn-success mb-3">🏠 Retour à l'accueil</a>
+
+    <!-- Bouton pour ajouter une nouvelle unité -->
+    <a href="{{ path('app_unite_new') }}" class="btn btn-success mb-3">➕ Créer une nouvelle unité</a>
+
+    <!-- Table des unités -->
+    <table class="table table-bordered table-striped">
+        <thead class="table-dark">
+            <tr>
+                <th>ID</th>
+                <th>Nom</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+        {% for unite in pagination %}
+            <tr>
+                <td>{{ unite.id }}</td>
+                <td>{{ unite.nom }}</td>
+                <td>
+                    <a href="{{ path('app_unite_show', {'id': unite.id}) }}" class="btn btn-info btn-sm">Voir</a>
+                    <a href="{{ path('app_unite_edit', {'id': unite.id}) }}" class="btn btn-warning btn-sm">Modifier</a>
+
+                    <form method="post"
+                          action="{{ path('app_unite_delete', {'id': unite.id}) }}"
+                          style="display:inline-block;"
+                          onsubmit="return confirm('Êtes-vous sûr de vouloir supprimer cette unité ?');">
+                        <input type="hidden" name="_token" value="{{ csrf_token('delete' ~ unite.id) }}">
+                        <button class="btn btn-danger btn-sm">Supprimer</button>
+                    </form>
+                </td>
+            </tr>
+        {% else %}
+            <tr>
+                <td colspan="3" class="text-center text-muted">Aucune unité trouvée.</td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+
+    <!-- Pagination -->
+    <div class="d-flex justify-content-center mt-4">
+        {{ knp_pagination_render(pagination) }}
+    </div>
+</div>
+{% endblock %}

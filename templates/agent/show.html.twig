@@ -1,0 +1,66 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Détails de l'Agent{% endblock %}
+
+{% block body %}
+<div class="container mt-5">
+    <!-- En-tête de la page -->
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h1 class="mb-0 text-dark">Détails de l'Agent</h1>
+        <a href="{{ path('app_agent_index') }}" class="btn btn-secondary btn-sm">
+            <i class="fas fa-arrow-left"></i> Retour à la liste
+        </a>
+    </div>
+
+    <!-- Carte contenant les informations de l'agent -->
+    <div class="card shadow-sm">
+        <div class="card-header bg-primary text-white">
+            <h3 class="card-title mb-0">Informations de l'Agent</h3>
+        </div>
+        <div class="card-body">
+            <!-- Tableau des détails de l'agent -->
+            <table class="table table-bordered table-striped">
+                <tbody>
+                    <tr>
+                        <th>ID</th>
+                        <td>{{ agent.id }}</td>
+                    </tr>
+                    <tr>
+                        <th>Matricule</th>
+                        <td>{{ agent.matricule }}</td>
+                    </tr>
+                    <tr>
+                        <th>Nom</th>
+                        <td>{{ agent.nom }}</td>
+                    </tr>
+                    <tr>
+                        <th>Numéro Agent</th>
+                        <td>{{ agent.numeroAgent }}</td>
+                    </tr>
+                    <tr>
+                        <th>Rôles</th>
+                        <td>
+                            {% if agent.roles is iterable %}
+                                {% for role in agent.roles %}
+                                    <span class="badge bg-primary">{{ role }}</span>
+                                {% endfor %}
+                            {% else %}
+                                <span class="badge bg-warning">Aucun rôle attribué</span>
+                            {% endif %}
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+        <div class="card-footer d-flex justify-content-between">
+            <!-- Bouton pour éditer l'agent -->
+            <a href="{{ path('app_agent_edit', {'id': agent.id}) }}" class="btn btn-warning btn-sm">
+                <i class="fas fa-edit"></i> Modifier
+            </a>
+
+            <!-- Formulaire pour supprimer l'agent -->
+            {{ include('agent/_delete_form.html.twig') }}
+        </div>
+    </div>
+</div>
+{% endblock %}

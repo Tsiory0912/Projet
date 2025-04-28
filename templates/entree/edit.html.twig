@@ -1,0 +1,26 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Edit Entree{% endblock %}
+
+{% block body %}
+    <div class="container mt-5">
+        <h1 class="mb-4">Modifier l'entrée</h1>
+
+        {# Affichage des messages d'erreur généraux (flash messages) #}
+        {% if app.flashes('error') %}
+            <div class="alert alert-danger">
+                {% for message in app.flashes('error') %}
+                    <p>{{ message }}</p>
+                {% endfor %}
+            </div>
+        {% endif %}
+
+        {# Formulaire d'édition - inclusion du formulaire d'édition de l'entrée #}
+        {{ include('entree/_form.html.twig', {'button_label': 'Update'}) }}
+
+        <a href="{{ path('app_entree_index') }}" class="btn btn-secondary">Retour à la liste</a>
+
+        {# Formulaire de suppression de l'entrée, si nécessaire #}
+        {{ include('entree/_delete_form.html.twig') }}
+    </div>
+{% endblock %}

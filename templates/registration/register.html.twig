@@ -1,0 +1,143 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Inscription{% endblock %}
+
+{% block body %}
+    <div class="container">
+        <div class="form-container">
+            <h1 class="text-center mb-4">Inscription</h1>
+
+            {# Affichage des messages flash (succès, erreur) #}
+            {% for label, messages in app.flashes %}
+                <div class="alert alert-{{ label }}">
+                    <ul>
+                        {% for message in messages %}
+                            <li>{{ message }}</li>
+                        {% endfor %}
+                    </ul>
+                </div>
+            {% endfor %}
+
+            {# Formulaire d'inscription #}
+            {{ form_start(registrationForm, {'attr': {'class': 'registration-form'}}) }}
+                <div class="mb-3">
+                    {{ form_label(registrationForm.username) }}
+                    {{ form_widget(registrationForm.username, {'attr': {'class': 'form-control custom-input'}}) }}
+                    {{ form_errors(registrationForm.username) }}
+                </div>
+
+                <div class="mb-3">
+                    {{ form_label(registrationForm.password) }}
+                    {{ form_widget(registrationForm.password, {'attr': {'class': 'form-control custom-input'}}) }}
+                    {{ form_errors(registrationForm.password) }}
+                </div>
+
+                <div class="mb-3">
+                    {{ form_widget(registrationForm.submit, {'attr': {'class': 'btn btn-primary custom-btn'}}) }}
+                </div>
+            {{ form_end(registrationForm) }}
+
+            <p class="text-center mt-3">Vous avez déjà un compte ? <a href="{{ path('app_login') }}">Se connecter</a></p>
+        </div>
+    </div>
+{% endblock %}
+
+{% block stylesheets %}
+    <style>
+        body {
+            background-color: #f4f7fa;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+        }
+
+        .container {
+            width: 100%;
+            max-width: 600px;
+            margin-top: 30px;
+        }
+
+        .form-container {
+            background-color: #ffffff;
+            padding: 50px 40px;
+            border-radius: 15px;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.15);
+        }
+
+        h1 {
+            color: #333;
+            font-size: 30px;
+            font-weight: 600;
+            text-align: center;
+        }
+
+        .form-control {
+            height: 50px;
+            padding: 12px;
+            font-size: 16px;
+            border-radius: 10px;
+            border: 1px solid #ccc;
+            transition: border 0.3s ease;
+            margin-top: 10px;
+            box-sizing: border-box;
+        }
+
+        .form-control:focus {
+            border: 1px solid #007bff;
+            outline: none;
+        }
+
+        .custom-input {
+            border-radius: 25px;
+        }
+
+        .btn {
+            padding: 15px 0;
+            border-radius: 25px;
+            font-size: 18px;
+            font-weight: bold;
+            width: 100%;
+            transition: background 0.3s ease;
+        }
+
+        .btn-primary {
+            background-color: #007bff;
+            border: none;
+            color: white;
+        }
+
+        .btn-primary:hover {
+            background-color: #0056b3;
+        }
+
+        .text-center a {
+            text-decoration: none;
+            color: #007bff;
+        }
+
+        .text-center a:hover {
+            text-decoration: underline;
+        }
+
+        .alert {
+            margin-top: 15px;
+            font-size: 14px;
+        }
+
+        .form-group {
+            display: flex;
+            flex-direction: column;
+            align-items: flex-start;
+            margin-bottom: 25px;
+        }
+
+        .form-group input {
+            width: 100%;
+            max-width: 450px;
+            margin-bottom: 15px;
+        }
+    </style>
+{% endblock %}

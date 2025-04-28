@@ -1,0 +1,25 @@
+security:
+    password_hashers:
+        App\Entity\User:
+            algorithm: auto
+
+    providers:
+        app_user_provider:
+            entity:
+                class: App\Entity\User
+                property: username
+
+    firewalls:
+        # Accès sans authentification pour les ressources de développement et les pages publiques
+        dev:
+            pattern: ^/(_(profiler|wdt)|css|images|js)/
+            security: false
+
+        # Configuration principale : accès sans authentification
+        main:
+            # Cette ligne désactive la sécurité pour toutes les pages
+            security: false
+
+    access_control:
+        # Accès libre à toutes les pages
+        - { path: ^/.*, roles: IS_AUTHENTICATED_ANONYMOUSLY }

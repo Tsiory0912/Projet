@@ -1,0 +1,235 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Connexion</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;700&display=swap" rel="stylesheet" />
+  <style>
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      font-family: 'Poppins', sans-serif;
+      background-color: #f4f7fa;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+      overflow: hidden;
+    }
+
+    .login-wrapper {
+      width: 90%;
+      max-width: 800px;
+      height: 500px;
+      display: flex;
+      border-radius: 20px;
+      overflow: hidden;
+      box-shadow: 0 15px 30px rgba(0, 0, 0, 0.2);
+      background-color: white;
+      position: relative;
+    }
+
+    .left-side {
+      flex: 1;
+      background-color: #007bff;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: 20px;
+      z-index: 1;
+    }
+
+    .left-side .logo {
+      margin-bottom: 20px;
+    }
+
+    .left-side .logo img {
+      max-width: 80px;
+    }
+
+    .left-side .illustration {
+      max-width: 100%;
+    }
+
+    .right-side {
+      flex: 1;
+      padding: 30px;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      z-index: 1;
+    }
+
+    h2 {
+      text-align: center;
+      color: #007bff;
+      margin-bottom: 20px;
+    }
+
+    .form-group {
+      position: relative;
+      margin-bottom: 20px;
+    }
+
+    .form-group input {
+      width: 100%;
+      padding: 12px 40px 12px 35px;
+      border: none;
+      border-bottom: 2px solid #ccc;
+      outline: none;
+      font-size: 15px;
+      background-color: transparent;
+    }
+
+    .form-group input:focus {
+      border-color: #007bff;
+    }
+
+    .form-group i.fa-user,
+    .form-group i.fa-lock {
+      position: absolute;
+      top: 12px;
+      left: 10px;
+      color: #007bff;
+    }
+
+    .toggle-password {
+      position: absolute;
+      top: 12px;
+      right: 10px;
+      cursor: pointer;
+      color: #999;
+    }
+
+    .error-message {
+      color: red;
+      text-align: center;
+      margin-bottom: 15px;
+    }
+
+    button {
+      width: 100%;
+      padding: 12px;
+      border: none;
+      border-radius: 25px;
+      background-color: #007bff;
+      color: white;
+      font-size: 16px;
+      font-weight: bold;
+      cursor: pointer;
+    }
+
+    button:hover {
+      background-color: #0056b3;
+    }
+
+    .signup-link {
+      text-align: center;
+      margin-top: 20px;
+    }
+
+    .signup-link a {
+      color: #007bff;
+      text-decoration: none;
+    }
+
+    .signup-link a:hover {
+      text-decoration: underline;
+    }
+
+    .curve {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      z-index: 0;
+    }
+
+    .curve path {
+      fill: white;
+    }
+
+    @media (max-width: 768px) {
+      .login-wrapper {
+        flex-direction: column;
+        height: auto;
+      }
+
+      .left-side {
+        height: 250px;
+      }
+
+      .right-side {
+        padding: 20px;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <div class="login-wrapper">
+    <div class="left-side">
+      <div class="logo">
+        <img src="{{ asset('images/logo.png') }}" alt="Logo" />
+      </div>
+      <img src="{{ asset('images/stock_illustration.png') }}" alt="Illustration" class="illustration" />
+    </div>
+
+    <!-- Courbe à droite -->
+    <svg class="curve" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 500" preserveAspectRatio="none">
+      <path d="M0,0 L800,0 L800,500 Q400,400 0,500 Z" />
+    </svg>
+
+    <div class="right-side">
+      <h2>Connexion</h2>
+
+      {% if error %}
+        <div class="error-message">
+          {{ error.messageKey|trans(error.messageData, 'security') }}
+        </div>
+      {% endif %}
+
+      <form method="post">
+        <div class="form-group">
+          <i class="fas fa-user"></i>
+          <input type="text" name="username" id="inputUsername" value="{{ last_username }}" required placeholder="Nom d'utilisateur" />
+        </div>
+
+        <div class="form-group">
+          <i class="fas fa-lock"></i>
+          <input type="password" name="password" id="inputPassword" required placeholder="Mot de passe" />
+          <i class="fas fa-eye-slash toggle-password" id="togglePassword"></i>
+        </div>
+
+        <button type="submit">Se connecter</button>
+
+        <div class="signup-link">
+          Vous n'avez pas encore de compte ? <a href="{{ path('app_register') }}">S'inscrire</a>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <script>
+    document.addEventListener('DOMContentLoaded', function () {
+      const toggle = document.getElementById('togglePassword');
+      const passwordField = document.getElementById('inputPassword');
+
+      toggle.addEventListener('click', function () {
+        const isPassword = passwordField.type === 'password';
+        passwordField.type = isPassword ? 'text' : 'password';
+        toggle.classList.toggle('fa-eye');
+        toggle.classList.toggle('fa-eye-slash');
+      });
+    });
+  </script>
+
+</body>
+</html>

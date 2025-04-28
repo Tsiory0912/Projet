@@ -1,0 +1,69 @@
+{% extends 'base.html.twig' %}
+
+{% block body %}
+<div class="container mt-5">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h1 class="mb-0">Les agents</h1>
+        <a href="{{ path('app_home') }}" class="text-decoration-none">
+            <i class="fas fa-home"></i> Retour à l'accueil
+        </a>
+    </div>
+
+    <!-- Formulaire de recherche avec bouton de réinitialisation -->
+    <form method="get" action="{{ path('app_agent_index') }}" class="mb-3">
+        <div class="input-group">
+            <input type="text" name="search" class="form-control" placeholder="Rechercher par nom ou matricule" value="{{ search }}">
+            <button class="btn btn-primary" type="submit">🔍 Rechercher</button>
+            <!-- Bouton de réinitialisation pour vider la recherche -->
+            <a href="{{ path('app_agent_index') }}" class="btn btn-secondary">🗑 Réinitialiser</a>
+        </div>
+    </form>
+
+    <a href="{{ path('app_agent_new') }}" class="btn btn-success mb-3">➕ Ajouter un nouvel agent</a>
+
+    <table class="table table-bordered table-striped">
+        <thead class="table-dark">
+            <tr>
+                <th>Id</th>
+                <th>Matricule</th>
+                <th>Nom</th>
+                <th>Numéro Agent</th> {# 🆕 colonne ajoutée #}
+                <th>Rôles</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+        {% for agent in agents %}
+            <tr>
+                <td>{{ agent.id }}</td>
+                <td>{{ agent.matricule }}</td>
+                <td>{{ agent.nom }}</td>
+                <td>{{ agent.numeroAgent }}</td> {# 🆕 affichage du numéro agent #}
+                <td>
+                    {% for role in agent.roles %}
+                        <span class="badge bg-primary">{{ role }}</span>
+                    {% endfor %}
+                </td>
+                <td>
+                    <a href="{{ path('app_agent_show', {'id': agent.id}) }}" class="btn btn-info btn-sm">Voir</a>
+                    <a href="{{ path('app_agent_edit', {'id': agent.id}) }}" class="btn btn-warning btn-sm">Modifier</a>
+                    <form method="post" action="{{ path('app_agent_delete', {'id': agent.id}) }}" style="display:inline-block;" onsubmit="return confirm('Êtes-vous sûr de vouloir supprimer cet agent ?');">
+                        <input type="hidden" name="_token" value="{{ csrf_token('delete' ~ agent.id) }}">
+                        <button class="btn btn-danger btn-sm">Supprimer</button>
+                    </form>
+                </td>
+            </tr>
+        {% else %}
+            <tr>
+                <td colspan="6" class="text-center text-muted">Aucun agent trouvé.</td> {# colspan ajusté de 5 à 6 #}
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+
+    <!-- Pagination -->
+    <div class="d-flex justify-content-center">
+        {{ knp_pagination_render(agents) }}
+    </div>
+</div>
+{% endblock %}

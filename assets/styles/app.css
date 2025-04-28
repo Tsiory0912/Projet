@@ -1,0 +1,10 @@
+body {
+    background-color: skyblue;
+}
+
+@font-face {
+    font-family: 'Bavex';
+    src: url('/font/Bavex-jEwzl.ttf') format('truetype');
+    font-weight: normal;
+    font-style: normal;
+}

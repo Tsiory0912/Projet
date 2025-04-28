@@ -1,0 +1,47 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Vérification des stocks{% endblock %}
+
+{% block body %}
+<div class="container mt-5">
+    <h1 class="mb-4">Vérification des stocks</h1>
+
+    <a href="{{ path('app_stock_new') }}" class="btn btn-success mb-3">➕ Ajouter un stock</a>
+
+    <table class="table table-bordered table-striped">
+        <thead class="table-dark">
+            <tr>
+                <th>ID</th>
+                <th>Quantité</th>
+                <th>Dernière mise à jour</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+        {% for stock in stocks %}
+            <tr>
+                <td>{{ stock.id }}</td>
+                <td>{{ stock.quantite }}</td>
+                <td>{{ stock.dateMaj ? stock.dateMaj|date('Y-m-d H:i:s') : '' }}</td>
+                <td>
+                    <a href="{{ path('app_stock_show', {'id': stock.id}) }}" class="btn btn-info btn-sm">Voir</a>
+                    <a href="{{ path('app_stock_edit', {'id': stock.id}) }}" class="btn btn-warning btn-sm">Modifier</a>
+
+                    <form method="post"
+                          action="{{ path('app_stock_delete', {'id': stock.id}) }}"
+                          style="display:inline-block;"
+                          onsubmit="return confirm('Êtes-vous sûr de vouloir supprimer ce stock ?');">
+                        <input type="hidden" name="_token" value="{{ csrf_token('delete' ~ stock.id) }}">
+                        <button class="btn btn-danger btn-sm">Supprimer</button>
+                    </form>
+                </td>
+            </tr>
+        {% else %}
+            <tr>
+                <td colspan="4" class="text-center text-muted">Aucun stock trouvé.</td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+</div>
+{% endblock %}
