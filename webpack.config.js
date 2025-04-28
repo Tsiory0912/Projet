@@ -14,6 +14,9 @@ Encore
     // only needed for CDN's or subdirectory deploy
     //.setManifestKeyPrefix('build/')
 
+    .enablePostCssLoader()
+    .enableSassLoader() // si tu utilises aussi du SCSS/SASS
+
     /*
      * ENTRY CONFIG
      *
